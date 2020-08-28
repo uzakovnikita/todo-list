@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import Registration from './Registration';
+import Registration from './Registration/Registration';
 import { connect } from 'react-redux';
 // import { newTaskForm } from './newTaskForm';
 // import { tasks } from './tasks';
@@ -15,7 +15,7 @@ interface Props {
 
 const mapStateToProps = (state: any) => {
   const props = {
-    isAuth: state.auth.isAuth
+    isAuth: state.registration.isAuth
   };
   return props;
 };
@@ -38,7 +38,7 @@ const App: FunctionComponent<Props> = (props: Props) => {
             <Registration />
           </Route>
           <Route path="authorization">{/* <Auth/> */}</Route>
-          <Redirect to="/authorization"></Redirect>
+          <Redirect to="/registration"></Redirect>
         </Switch>
       </div>
     </Router>
