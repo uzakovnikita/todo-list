@@ -1,9 +1,14 @@
 import React, { FunctionComponent } from 'react';
-import Auth from './Auth';
+import Registration from './Registration';
 import { connect } from 'react-redux';
-import { newTaskForm } from './newTaskForm';
-import { tasks } from './tasks';
-import { Route, Redirect, BrowserRouter as Router } from 'react-router-dom';
+// import { newTaskForm } from './newTaskForm';
+// import { tasks } from './tasks';
+import {
+  Route,
+  Redirect,
+  BrowserRouter as Router,
+  Switch
+} from 'react-router-dom';
 interface Props {
   isAuth: boolean;
 }
@@ -20,20 +25,21 @@ const App: FunctionComponent<Props> = (props: Props) => {
   const tasksManager = (
     <Router>
       <div className="app">
-        <Route path="tasks">
-          <NewTaskForm />
-          <Tasks />
-        </Route>
+        <Route path="tasks">{/* <NewTaskForm />
+          <Tasks /> */}</Route>
       </div>
     </Router>
   );
   const result = isAuth ? null : (
     <Router>
       <div className="app">
-        <Route path="/registration">
-          <Auth />
-        </Route>
-        <Redirect to="/registration"></Redirect>
+        <Switch>
+          <Route path="/registration">
+            <Registration />
+          </Route>
+          <Route path="authorization">{/* <Auth/> */}</Route>
+          <Redirect to="/authorization"></Redirect>
+        </Switch>
       </div>
     </Router>
   );
