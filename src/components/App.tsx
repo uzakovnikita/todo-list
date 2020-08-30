@@ -1,27 +1,40 @@
-import React, { FunctionComponent } from 'react';
-import Registration from './Registration/Registration';
-import { connect } from 'react-redux';
-// import { newTaskForm } from './newTaskForm';
-// import { tasks } from './tasks';
+import React, { FunctionComponent } from "react";
+import Registration from "./Registration/Registration";
+import Login from "./Login/Login";
+import { connect } from "react-redux";
+
 import {
   Route,
   Redirect,
   BrowserRouter as Router,
-  Switch
-} from 'react-router-dom';
+  Switch,
+  Link,
+} from "react-router-dom";
+import Axios from "axios";
 interface Props {
-  isAuth: boolean;
+  token: string | null;
 }
 
-const mapStateToProps = (state: any) => {
-  const props = {
-    isAuth: state.registration.isAuth
-  };
-  return props;
-};
+// const mapStateToProps = (state: any) => {
+//   const props = {
+//     token: state.authorization.token,
+//   };
+//   return props;
+// };
 
 const App: FunctionComponent<Props> = (props: Props) => {
-  const { isAuth } = props;
+  const { token } = props;
+
+  console.log(`${token} token nahuy`);
+  const config = {
+    mehtod: "get",
+    url: "https://api-nodejs-todolist.herokuapp.com/user/me",
+    headers: {
+      Authorization: token,
+    },
+  };
+  Axios(config);
+  const isAuth = false;
   const tasksManager = (
     <Router>
       <div className="app">
@@ -33,17 +46,31 @@ const App: FunctionComponent<Props> = (props: Props) => {
   const result = isAuth ? null : (
     <Router>
       <div className="app">
-        <Switch>
-          <Route path="/registration">
-            <Registration />
-          </Route>
-          <Route path="authorization">{/* <Auth/> */}</Route>
-          <Redirect to="/registration"></Redirect>
-        </Switch>
+        <div className="wrapper">
+          <nav>
+            <ul>
+              <li>
+                <Link to="/signup"> Sign Up </Link>
+              </li>
+              <li>
+                <Link to="/login"> Log In </Link>
+              </li>
+            </ul>
+          </nav>
+          <Switch>
+            <Route path="/signup">
+              <Registration />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Redirect exact from="/" to="/signup"></Redirect>
+          </Switch>
+        </div>
       </div>
     </Router>
   );
   return result;
 };
 
-export default connect(mapStateToProps)(App);
+export default connect(null)(App);

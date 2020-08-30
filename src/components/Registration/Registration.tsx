@@ -1,32 +1,34 @@
-import React, { FunctionComponent } from 'react';
-import { connect } from 'react-redux';
-import * as actions from './../../actions/index.js';
-import _ from 'lodash';
-import { Field, reduxForm } from 'redux-form';
-import './Registration.scss';
+import React, { FunctionComponent } from "react";
+import { connect } from "react-redux";
+import * as actions from "./../../actions/index.js";
+import _ from "lodash";
+import { Field, reduxForm } from "redux-form";
+import "./Registration.scss";
 const actionCreators = {
-  fetchRegister: actions.fetchRegister
+  fetchRegister: actions.fetchRegister,
+  fetchAuth: actions.fetchAuth,
 };
 
 const mapStateToProps = (state: { registrationState: string }) => {
   const { registrationState } = state;
   const props = {
-    registrationState
+    registrationState,
   };
   return props;
 };
 
 const Registration: FunctionComponent<any> = (props: any) => {
   const handleSignUp = async (values: any) => {
-    const { fetchRegister } = props;
-    fetchRegister(values);
+    const { fetchRegister, fetchAuth } = props;
+    await fetchRegister(values);
+    await fetchAuth(values);
   };
   const { handleSubmit, submitting, pristine, registrationState } = props;
-  console.log(registrationState);
-  if (registrationState === 'failed') {
-    return <p className="registration__failed">FAILED</p>;
+
+  if (registrationState === "failed") {
+    return <p className="registration__failed">FAILED REGISTRATION</p>;
   }
-  if (registrationState === 'request') {
+  if (registrationState === "request") {
     return <p className="registation__request">REQUEST, PLEASE WAIT</p>;
   }
   return (
@@ -34,8 +36,7 @@ const Registration: FunctionComponent<any> = (props: any) => {
       <p className="registration__title">Sign up</p>
       <form
         className="form-inline registration__form"
-        onSubmit={handleSubmit(handleSignUp)}
-      >
+        onSubmit={handleSubmit(handleSignUp)}>
         <div className="form-group mx-3 registration__fields">
           <div className="registration__input">
             <Field
@@ -73,5 +74,5 @@ const Registration: FunctionComponent<any> = (props: any) => {
 
 const ConnectedAuth = connect(mapStateToProps, actionCreators)(Registration);
 export default reduxForm({
-  form: 'Registration'
+  form: "Registration",
 })(ConnectedAuth);

@@ -27,26 +27,29 @@ export const fetchRegister = (credentials) => async(dispatch) => {
         };
         const response = await axios(config);
         const token = response.data.token;
-        dispatch(fetchRegisterSuccess(credentials, token));
+        dispatch(fetchRegisterSuccess({ credentials, token }));
     } catch (e) {
         dispatch(fetchRegisterFailure());
     }
 };
 
-export const fetchAuth = (email, password) => async(dispatch) => {
+export const fetchAuth = (credentials) => async(dispatch) => {
     dispatch(fetchAutorizationRequest());
+    const { email, password } = credentials;
     try {
         const config = {
-            method: 'get',
+            method: 'post',
             url: urlLogIn(),
             headers: {
                 'Content-Type': 'application/json'
             },
             data: { email, password }
         }
-        await axios(config)
-        dispatch(fetchAutorizationSuccess(email))
+        const response = await axios(config);
+        console.log(response.data.token)
+        sessionStorage.setItem('token', response.data.token)
+        dispatch(fetchAutorizationSuccess({ email, token: response.token }))
     } catch (e) {
-        dispatch(fetchRegisterFailure(e))
+        dispatch(fetchAuthorizationFailure(e))
     }
 }
