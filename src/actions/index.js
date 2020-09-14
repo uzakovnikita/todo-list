@@ -14,6 +14,10 @@ export const fetchAutorizationRequest = createAction('AUTHORIZATION_FETCH_REQUES
 export const fetchAutorizationSuccess = createAction('AUTHORIZATION_FETCH_SUCCESS');
 export const fetchAuthorizationFailure = createAction('AUTHORIZATION_FETCH_FAILURE');
 
+export const fetchLoggedRequest = createAction('IS_AUTH_FETCH_REQUEST');
+export const fetchLoggedSuccess = createAction('IS_AUTH_FETCH_SUCCESS');
+export const fetchLoggedFailure = createAction('IS_AUTH_FETCH_FAILURE');
+
 export const fetchRegister = (credentials) => async(dispatch) => {
     dispatch(fetchRegisterRequest());
     try {
@@ -46,10 +50,26 @@ export const fetchAuth = (credentials) => async(dispatch) => {
             data: { email, password }
         }
         const response = await axios(config);
-        console.log(response.data.token)
         sessionStorage.setItem('token', response.data.token)
         dispatch(fetchAutorizationSuccess({ email, token: response.token }))
     } catch (e) {
         dispatch(fetchAuthorizationFailure(e))
+    }
+}
+
+export const fetchLogged = (token) => async(dispatch) => {
+    dispatch(fetchLoggedRequest());
+    try {
+        const config = {
+            mehtod: "get",
+            url: "https://api-nodejs-todolist.herokuapp.com/user/me",
+            headers: {
+                Authorization: token,
+            },
+        };
+        const response = await axios(config);
+        dispatch(fetchLoggedSuccess());
+    } catch (e) {
+        dispatch(fetchLoggedFailure(e))
     }
 }

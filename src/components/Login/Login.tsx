@@ -1,15 +1,15 @@
-import React, { FunctionComponent } from "react";
-import { connect } from "react-redux";
-import { fromPairs } from "lodash";
-import * as actions from "../../actions/index";
-import { Field, reduxForm } from "redux-form";
+import React, { FunctionComponent } from 'react';
+import { connect } from 'react-redux';
+import { fromPairs } from 'lodash';
+import * as actions from '../../actions/index';
+import { Field, reduxForm } from 'redux-form';
 
 const actionCreators = {
-  fetchAuth: actions.fetchAuth,
+  fetchAuth: actions.fetchAuth
 };
 const mapStateToProps = (state: any) => {
   const props = {
-    autorizationState: state.autorizationState,
+    autorizationState: state.autorizationState
   };
   return props;
 };
@@ -19,12 +19,11 @@ const Login: FunctionComponent<any> = (props: any) => {
     fetchAuth(values);
   };
   const { handleSubmit, submitting, pristine, autorizationState } = props;
-  console.log(props);
   console.log(autorizationState);
-  if (autorizationState === "failed") {
+  if (autorizationState === 'failed') {
     return <p>AUTH FAILED</p>;
   }
-  if (autorizationState === "request") {
+  if (autorizationState === 'request') {
     return <p>PLEASE, WAIT, AUTH IN PROCESSING</p>;
   }
   return (
@@ -60,5 +59,5 @@ const Login: FunctionComponent<any> = (props: any) => {
 
 const connectLogin = connect(mapStateToProps, actionCreators)(Login);
 export default reduxForm({
-  form: "auth",
+  form: 'auth'
 })(connectLogin);

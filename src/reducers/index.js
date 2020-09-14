@@ -12,7 +12,7 @@ const registrationState = handleActions({
     },
     [actions.fetchRegisterFailure]() {
         return 'failed'
-    }
+    },
 
 }, 'none')
 const autorizationState = handleActions({
@@ -24,19 +24,19 @@ const autorizationState = handleActions({
     },
     [actions.fetchAuthorizationFailure]() {
         return 'failed';
-    }
+    },
 }, 'none')
-
-// const byEmail = {
-//     email: {credentials, token}
-// }
-// const allEmail = [
-//     email,
-// ]
-// const registation = {
-//     byEmail,
-//     allEmail
-// }
+const loggedState = handleActions({
+    [actions.fetchLoggedRequest]() {
+        return 'request';
+    },
+    [actions.fetchLoggedSuccess]() {
+        return 'finished';
+    },
+    [actions.fetchLoggedFailure]() {
+        return 'failed';
+    },
+}, 'none')
 const registration = handleActions({
     [actions.fetchRegisterSuccess](state, { payload: { credentials, token } }) {
         const { byEmail, allEmail } = state;
@@ -62,12 +62,22 @@ const authorization = handleActions({
             token
         }
     },
-}, { email: '', isAuth: false })
+}, { email: '', token: '' })
+const logged = handleActions({
+    [actions.fetchLoggedSuccess](state) {
+        return true;
+    },
+    [actions.fetchLoggedFailure](state) {
+        return false;
+    }
+}, false)
 
 export default combineReducers({
     registration,
     authorization,
+    logged,
     registrationState,
     autorizationState,
+    loggedState,
     form: formReducer
 });

@@ -1,49 +1,54 @@
-import React, { FunctionComponent } from "react";
-import Registration from "./Registration/Registration";
-import Login from "./Login/Login";
-import { connect } from "react-redux";
-
+import React, { FunctionComponent, useEffect } from 'react';
+import Registration from './Registration/Registration';
+import Login from './Login/Login';
+import { connect } from 'react-redux';
+import * as actions from '../actions/index';
 import {
   Route,
   Redirect,
   BrowserRouter as Router,
   Switch,
-  Link,
-} from "react-router-dom";
-import Axios from "axios";
-interface Props {
-  token: string | null;
-}
+  Link
+} from 'react-router-dom';
 
-// const mapStateToProps = (state: any) => {
-//   const props = {
-//     token: state.authorization.token,
-//   };
-//   return props;
-// };
-
-const App: FunctionComponent<Props> = (props: Props) => {
-  const { token } = props;
-
-  console.log(`${token} token nahuy`);
-  const config = {
-    mehtod: "get",
-    url: "https://api-nodejs-todolist.herokuapp.com/user/me",
-    headers: {
-      Authorization: token,
-    },
+const actionCreators = {
+  fetchLogged: actions.fetchLogged
+};
+const mapStateToProps = (state: any) => {
+  const props = {
+    logged: state.logged,
+    loggedState: state.loggedState
   };
-  Axios(config);
-  const isAuth = false;
+  return props;
+};
+const App: FunctionComponent<any> = (props: any) => {
+  const { fetchLogged, loggedState, logged } = props;
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = sessionStorage.getItem('token');
+      await fetchLogged(token);
+    };
+    fetchData();
+    return;
+  }, []);
+  if (loggedState === 'request') {
+    return <p>WAIT</p>;
+  }
   const tasksManager = (
     <Router>
       <div className="app">
-        <Route path="tasks">{/* <NewTaskForm />
-          <Tasks /> */}</Route>
+        <Switch>
+          <Route path="tasks">
+            <div>HELOOSUKA</div>
+          </Route>
+          <Redirect to="/tasks"></Redirect>
+        </Switch>
       </div>
     </Router>
   );
-  const result = isAuth ? null : (
+  const result = logged ? (
+    tasksManager
+  ) : (
     <Router>
       <div className="app">
         <div className="wrapper">
@@ -64,7 +69,7 @@ const App: FunctionComponent<Props> = (props: Props) => {
             <Route path="/login">
               <Login />
             </Route>
-            <Redirect exact from="/" to="/signup"></Redirect>
+            <Redirect to="/signup"></Redirect>
           </Switch>
         </div>
       </div>
@@ -73,4 +78,4 @@ const App: FunctionComponent<Props> = (props: Props) => {
   return result;
 };
 
-export default connect(null)(App);
+export default connect(mapStateToProps, actionCreators)(App);
