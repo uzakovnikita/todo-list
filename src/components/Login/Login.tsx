@@ -1,11 +1,12 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fromPairs } from 'lodash';
 import * as actions from '../../actions/index';
 import { Field, reduxForm } from 'redux-form';
 
 const actionCreators = {
-  fetchAuth: actions.fetchAuth
+  fetchAuth: actions.fetchAuth,
+  fetchLogged: actions.fetchLogged
 };
 const mapStateToProps = (state: any) => {
   const props = {
@@ -18,13 +19,25 @@ const Login: FunctionComponent<any> = (props: any) => {
     const { fetchAuth } = props;
     fetchAuth(values);
   };
-  const { handleSubmit, submitting, pristine, autorizationState } = props;
-  console.log(autorizationState);
+  const {
+    handleSubmit,
+    submitting,
+    pristine,
+    autorizationState,
+    fetchLogged
+  } = props;
   if (autorizationState === 'failed') {
     return <p>AUTH FAILED</p>;
   }
   if (autorizationState === 'request') {
     return <p>PLEASE, WAIT, AUTH IN PROCESSING</p>;
+  }
+  if (autorizationState === 'finished') {
+    const fetchData = async () => {
+      const token = sessionStorage.getItem('token');
+      await fetchLogged(token);
+    };
+    fetchData();
   }
   return (
     <div className="auth">
