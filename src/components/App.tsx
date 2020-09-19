@@ -1,6 +1,8 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import Registration from './Registration/Registration';
 import Login from './Login/Login';
+import Tasks from './Tasks/Tasks';
+import NewTaskForm from './newTaskForm/newTaskForm';
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import {
@@ -35,16 +37,22 @@ const App: FunctionComponent<any> = (props: any) => {
     return <p>WAIT</p>;
   }
   const tasksManager = (
-    <Router>
-      <div className="app">
-        <Switch>
-          <Route path="tasks">
-            <div>HELOOSUKA</div>
-          </Route>
-          <Redirect to="/tasks"></Redirect>
-        </Switch>
-      </div>
-    </Router>
+    <>
+      <Router>
+        <div>
+          <NewTaskForm />
+          <Tasks />
+        </div>
+        <div className="app">
+          <Switch>
+            <Route path="tasks">
+              <div>HELOOSUKA</div>
+            </Route>
+            <Redirect to="/tasks"></Redirect>
+          </Switch>
+        </div>
+      </Router>
+    </>
   );
   const result = logged ? (
     tasksManager

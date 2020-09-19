@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions/index';
 import { handleActions } from 'redux-actions';
+import _ from 'lodash';
 
 const registrationState = handleActions({
     [actions.fetchRegisterSuccess]() {
@@ -14,7 +15,8 @@ const registrationState = handleActions({
         return 'failed'
     },
 
-}, 'none')
+}, 'none');
+
 const autorizationState = handleActions({
     [actions.fetchAutorizationRequest]() {
         return 'request';
@@ -25,7 +27,8 @@ const autorizationState = handleActions({
     [actions.fetchAuthorizationFailure]() {
         return 'failed';
     },
-}, 'none')
+}, 'none');
+
 const loggedState = handleActions({
     [actions.fetchLoggedRequest]() {
         return 'request';
@@ -36,7 +39,44 @@ const loggedState = handleActions({
     [actions.fetchLoggedFailure]() {
         return 'failed';
     },
-}, 'none')
+}, 'none');
+
+const tasksRemovingState = handleActions({
+    [actions.removeTaskRequest]() {
+        return 'request';
+    },
+    [actions.removeTaskSuccess]() {
+        return 'finished';
+    },
+    [actions.removeTaskFailure]() {
+        return 'failed';
+    },
+}, 'none');
+
+const tasksAddState = handleActions({
+    [actions.addTaskRequest]() {
+        return 'request';
+    },
+    [actions.addTaskSuccess]() {
+        return 'finished';
+    },
+    [actions.addTaskFailure]() {
+        return 'failed';
+    },
+}, 'none');
+
+const tasksFetchState = handleActions({
+    [actions.fetchTaskRequest]() {
+        return 'request';
+    },
+    [actions.fetchTaskSuccess]() {
+        return 'finished';
+    },
+    [actions.fetchTaskFailure]() {
+        return 'failed';
+    }
+}, 'none');
+
 const registration = handleActions({
     [actions.fetchRegisterSuccess](state, { payload: { credentials, token } }) {
         const { byEmail, allEmail } = state;
@@ -62,7 +102,8 @@ const authorization = handleActions({
             token
         }
     },
-}, { email: '', token: '' })
+}, { email: '', token: '' });
+
 const logged = handleActions({
     [actions.fetchLoggedSuccess](state) {
         return true;
@@ -70,14 +111,40 @@ const logged = handleActions({
     [actions.fetchLoggedFailure](state) {
         return false;
     }
-}, false)
+}, false);
+
+const tasks = handleActions({
+    [actions.fetchTaskSuccess](state, { payload: { data } }) {
+        return {
+            byId: _.keyBy(data, 'id'),
+            allIds: data.map(t => t.id)
+        }
+    },
+    // [actions.removeTaskSuccess](state, { payload: { id } }) {
+    //     const { byId, allIds } = state;
+    //     return {
+    //         byId: _.omit(byId, id),
+    //         allIds: _.without(allIds, id),
+    //     };
+    // },
+    // [actions.addTaskSuccess](state, { payload: { id, task } }) {
+    //     return {
+    //         byId: {...state.byId, [task.id]: task },
+    //         allIds: [...state.allIds, task.id],
+    //     }
+    // }
+}, { byId: {}, allIds: [] });
 
 export default combineReducers({
     registration,
     authorization,
     logged,
+    tasks,
     registrationState,
     autorizationState,
     loggedState,
+    tasksRemovingState,
+    tasksAddState,
+    tasksFetchState,
     form: formReducer
 });
