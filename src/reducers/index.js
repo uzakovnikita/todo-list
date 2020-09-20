@@ -116,8 +116,8 @@ const logged = handleActions({
 const tasks = handleActions({
     [actions.fetchTaskSuccess](state, { payload: { data } }) {
         return {
-            byId: _.keyBy(data, 'id'),
-            allIds: data.map(t => t.id)
+            byId: _.keyBy(data, '_id'),
+            allIds: data.map(t => t._id)
         }
     },
     // [actions.removeTaskSuccess](state, { payload: { id } }) {

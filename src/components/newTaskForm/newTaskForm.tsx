@@ -5,16 +5,17 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions/index';
 
 const actionCreators = {
-  addTask: actions.addTask
+  addTask: actions.addTask,
+  fetchTask: actions.fetchTask
 };
 
 const newTaskForm: FunctionComponent<any> = (props: any) => {
   const handleAddTask = async (values: any) => {
-    const { addTask } = props;
+    const { addTask, fetchTask } = props;
     const { text } = values;
     const token = sessionStorage.getItem('token');
     await addTask(text, token);
-    console.log(text);
+    await fetchTask(token);
     props.reset();
   };
   const { handleSubmit, submitting, pristine, error } = props;

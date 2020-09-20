@@ -80,7 +80,7 @@ export const addTask = (task, token) => async(dispatch) => {
         await axios(config);
         console.log('addTask success')
         dispatch(addTaskSuccess());
-        fetchTask(token);
+        console.log('actions done')
     } catch (e) {
         console.log('add failure')
         dispatch(addTaskFailure());
